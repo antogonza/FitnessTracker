@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>WKBackgroundModes</key>
+	<array>
+		<string>workout-processing</string>
+	</array>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Esta app necesita leer tus entrenamientos previos para mostrar estadísticas.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Esta app necesita guardar tus sesiones de entrenamiento en Apple Health para que cuenten en tus anillos de actividad.</string>
+</dict>
+</plist>
