@@ -1,0 +1,10 @@
+# Assets Requeridos para Fitness Tracker
+
+Este archivo servirá para listar y describir las imágenes, iconos y otros assets visuales que iremos necesitando durante el desarrollo.
+
+## Icono de la App (App Icon)
+- **Descripción:** Un icono que represente fuerza y simplicidad. Podría ser una pesa o mancuerna minimalista (estilo Apple) sobre un fondo vibrante (ej. verde neón o naranja oscuro).
+- **Dónde se usa:** Pantalla de inicio de iOS y Apple Watch.
+- **Estado:** Pendiente
+
+*(Añadiremos más assets según avancemos en las vistas)*
