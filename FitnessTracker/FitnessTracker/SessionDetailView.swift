@@ -29,19 +29,19 @@ struct SessionDetailView: View {
                     Text("Inicio")
                     Spacer()
                     Text(session.startTime.formatted(date: .abbreviated, time: .shortened))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.white.opacity(0.6))
                 }
                 HStack {
                     Text("Fin")
                     Spacer()
                     Text(session.endTime?.formatted(date: .abbreviated, time: .shortened) ?? "En progreso")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.white.opacity(0.6))
                 }
                 HStack {
                     Text("Volumen total")
                     Spacer()
                     Text("\(String(format: "%.1f", totalVolume)) kg")
-                        .foregroundColor(.secondary)
+                        .foregroundColor(.white.opacity(0.6))
                 }
             }
             
@@ -50,7 +50,7 @@ struct SessionDetailView: View {
                     ForEach(Array(sets.enumerated()), id: \.element.id) { index, set in
                         HStack {
                             Text("Serie \(index + 1)")
-                                .foregroundColor(.secondary)
+                                .foregroundColor(.white.opacity(0.6))
                             Spacer()
                             Text("\(String(format: "%.1f", set.weight)) kg × \(set.reps)")
                                 .fontWeight(.medium)

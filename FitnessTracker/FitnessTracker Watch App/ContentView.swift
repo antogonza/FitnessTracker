@@ -31,72 +31,95 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(spacing: 12) {
+                VStack(spacing: 16) {
                     if let session = todaySession {
                         // ESTADO: Entrenamiento ya completado hoy
-                        VStack(spacing: 8) {
-                            Text("¡TRABAJO HECHO!")
-                                .font(.caption2.bold())
-                                .foregroundStyle(.green)
+                        VStack(spacing: 12) {
+                            HStack {
+                                Image(systemName: "checkmark.seal.fill")
+                                    .foregroundStyle(Theme.successGradient)
+                                Text("TRABAJO HECHO")
+                                    .font(.system(.caption2, design: .rounded).bold())
+                                    .foregroundStyle(.white.opacity(0.6))
+                            }
                             
                             ZStack {
                                 Circle()
-                                    .stroke(Color.green.opacity(0.2), lineWidth: 8)
+                                    .stroke(Color.green.opacity(0.1), lineWidth: 10)
                                 Circle()
                                     .trim(from: 0, to: 1.0)
-                                    .stroke(Color.green, style: StrokeStyle(lineWidth: 8, lineCap: .round))
+                                    .stroke(Theme.successGradient, style: StrokeStyle(lineWidth: 10, lineCap: .round))
                                     .rotationEffect(.degrees(-90))
+                                    .shadow(color: .green.opacity(0.3), radius: 4)
                                 
-                                VStack(spacing: 0) {
+                                VStack(spacing: -2) {
                                     Text("\(streak)")
-                                        .font(.system(size: 34, weight: .black, design: .rounded))
-                                    Text("DÍAS 🔥")
-                                        .font(.system(size: 10, weight: .bold))
+                                        .font(.system(size: 38, weight: .black, design: .rounded))
+                                        .foregroundStyle(.white)
+                                    Text("DÍAS")
+                                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                                        .foregroundStyle(.white.opacity(0.6))
                                 }
                             }
                             .frame(width: 100, height: 100)
-                            .padding(.vertical, 5)
                             
-                            Text("Has completado:")
-                                .font(.caption2)
-                                .foregroundStyle(.secondary)
-                            Text(session.routine?.name ?? "Entrenamiento")
-                                .font(.caption.bold())
-                                .lineLimit(1)
+                            VStack(spacing: 2) {
+                                Text("Completado hoy:")
+                                    .font(.system(size: 10))
+                                    .foregroundStyle(.white.opacity(0.6))
+                                Text(session.routine?.name ?? "Entrenamiento")
+                                    .font(.system(.footnote, design: .rounded).bold())
+                                    .lineLimit(1)
+                            }
                             
                             Button {
                                 showAllRoutines = true
                             } label: {
                                 Text("Ver más rutinas")
-                                    .font(.caption2)
+                                    .font(.system(.caption2, design: .rounded).bold())
+                                    .frame(maxWidth: .infinity)
                             }
-                            .buttonStyle(.plain)
-                            .foregroundStyle(.orange)
-                            .padding(.top, 5)
+                            .buttonStyle(.bordered)
+                            .tint(.orange)
+                            .controlSize(.small)
                         }
-                        .padding()
+                        .fitnessCard()
                     } else if let routine = todayRoutine {
                         // ESTADO: Rutina sugerida para hoy
-                        VStack(alignment: .leading, spacing: 8) {
+                        VStack(alignment: .leading, spacing: 12) {
                             HStack {
-                                Text("SUGERENCIA DE HOY")
-                                    .font(.caption2.bold())
+                                Text("SUGERENCIA")
+                                    .font(.system(.caption2, design: .rounded).bold())
                                     .foregroundStyle(.orange)
                                 Spacer()
-                                Text("\(streak) 🔥")
-                                    .font(.caption2.bold())
+                                HStack(spacing: 2) {
+                                    Text("\(streak)")
+                                        .font(.system(.caption2, design: .rounded).bold())
+                                    Text("🔥")
+                                }
                             }
                             
-                            Text(routine.name)
-                                .font(.title3.bold())
-                                .lineLimit(2)
-                                .fixedSize(horizontal: false, vertical: true)
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(routine.name)
+                                    .font(.system(.title3, design: .rounded).bold())
+                                    .lineLimit(2)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                
+                                Text("\(routine.exercises?.count ?? 0) ejercicios")
+                                    .font(.system(size: 11))
+                                    .foregroundStyle(.white.opacity(0.6))
+                            }
                             
                             NavigationLink {
                                 SessionPagingView(routine: routine)
                             } label: {
-                                Label("Empezar", systemImage: "play.fill")
-                                    .frame(maxWidth: .infinity)
+                                HStack {
+                                    Text("Empezar")
+                                        .font(.system(.body, design: .rounded).bold())
+                                    Spacer()
+                                    Image(systemName: "play.fill")
+                                }
+                                .padding(.horizontal, 4)
                             }
                             .buttonStyle(.borderedProminent)
                             .tint(.orange)
@@ -104,25 +127,29 @@ struct ContentView: View {
                             Button("Elegir otra rutina...") {
                                 showAllRoutines = true
                             }
-                            .font(.caption2)
-                            .foregroundStyle(.secondary)
+                            .font(.system(.caption2, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.6))
+                            .frame(maxWidth: .infinity, alignment: .center)
                         }
-                        .padding()
-                        .background(Color.gray.opacity(0.2))
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                        .fitnessCard()
                     } else {
                         // ESTADO: Día de descanso o sin plan
-                        VStack(spacing: 12) {
-                            Image(systemName: "moon.zzz.fill")
-                                .font(.system(size: 40))
-                                .foregroundStyle(.blue)
+                        VStack(spacing: 16) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.blue.opacity(0.1))
+                                    .frame(width: 60, height: 60)
+                                Image(systemName: "moon.zzz.fill")
+                                    .font(.system(size: 30))
+                                    .foregroundStyle(Theme.secondaryGradient)
+                            }
                             
                             VStack(spacing: 4) {
                                 Text("Día de Descanso")
-                                    .font(.headline)
-                                Text("La recuperación es parte del entrenamiento.")
-                                    .font(.caption2)
-                                    .foregroundStyle(.secondary)
+                                    .font(.system(.headline, design: .rounded))
+                                Text("La recuperación es clave para el progreso")
+                                    .font(.system(size: 11))
+                                    .foregroundStyle(.white.opacity(0.6))
                                     .multilineTextAlignment(.center)
                             }
                             
@@ -130,15 +157,17 @@ struct ContentView: View {
                                 showAllRoutines = true
                             } label: {
                                 Text("Entrenar algo hoy")
+                                    .font(.system(.body, design: .rounded).bold())
                                     .frame(maxWidth: .infinity)
                             }
                             .buttonStyle(.bordered)
                             .tint(.blue)
                         }
-                        .padding()
+                        .fitnessCard()
                     }
                 }
                 .padding(.horizontal)
+                .padding(.bottom, 10)
             }
             .navigationTitle("Fitness")
             .sheet(isPresented: $showAllRoutines) {
@@ -201,15 +230,18 @@ struct AllRoutinesSheet: View {
                 NavigationLink {
                     SessionPagingView(routine: routine)
                 } label: {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 2) {
                         Text(routine.name)
-                            .font(.headline)
+                            .font(.system(.headline, design: .rounded))
                         Text("\(routine.exercises?.count ?? 0) ejercicios")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                            .font(.system(.caption2, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.6))
                     }
+                    .padding(.vertical, 4)
                 }
+                .listRowBackground(Theme.glassBackground.clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous)))
             }
+            .listStyle(.carousel)
             .navigationTitle("Rutinas")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
@@ -219,3 +251,4 @@ struct AllRoutinesSheet: View {
         }
     }
 }
+

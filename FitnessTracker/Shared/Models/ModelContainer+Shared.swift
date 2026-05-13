@@ -1,6 +1,29 @@
 import SwiftUI
 import SwiftData
 
+@Model
+final class Bar {
+    var id: UUID?
+    var weight: Double = 0.0
+    var name: String = "Sin nombre"
+    var type: String = "Estándar"
+    
+    init(id: UUID = UUID(), weight: Double, name: String, type: String = "ESTÁNDAR") {
+        self.id = id
+        self.weight = weight
+        self.name = name
+        self.type = type
+    }
+    
+    static var defaults: [Bar] {
+        [
+            Bar(weight: 20.0, name: "20 KG", type: "OLÍMPICA"),
+            Bar(weight: 10.0, name: "10 KG", type: "ESTÁNDAR"),
+            Bar(weight: 7.5, name: "7.5 KG", type: "EZ-BAR")
+        ]
+    }
+}
+
 // Extensión para proporcionar contenedores de SwiftData de forma sencilla para la App y Previews
 extension ModelContainer {
     
@@ -12,7 +35,8 @@ extension ModelContainer {
             Exercise.self,
             Session.self,
             WorkoutSet.self,
-            WeeklySchedule.self
+            WeeklySchedule.self,
+            Bar.self
         ])
         
         let modelConfiguration = ModelConfiguration(
@@ -27,6 +51,9 @@ extension ModelContainer {
             
             // Limpieza de sesiones fantasma (Fase 13)
             cleanupGhostSessions(context: container.mainContext)
+            
+            // Inicializar barras por defecto si el esquema está vacío
+            initializeDefaultBars(context: container.mainContext)
             
             return container
         } catch {
@@ -53,7 +80,8 @@ extension ModelContainer {
             Exercise.self,
             Session.self,
             WorkoutSet.self,
-            WeeklySchedule.self
+            WeeklySchedule.self,
+            Bar.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
         
@@ -75,6 +103,11 @@ extension ModelContainer {
             let set1 = WorkoutSet(weight: 80, reps: 8, exercise: ex1, session: session)
             container.mainContext.insert(set1)
             
+            // Insertar barras por defecto en preview
+            for bar in Bar.defaults {
+                container.mainContext.insert(bar)
+            }
+            
             try? container.mainContext.save()
             
             return container
@@ -83,15 +116,22 @@ extension ModelContainer {
         }
     }()
     
+    @MainActor
+    private static func initializeDefaultBars(context: ModelContext) {
+        let descriptor = FetchDescriptor<Bar>()
+        if let count = try? context.fetchCount(descriptor), count == 0 {
+            for bar in Bar.defaults {
+                context.insert(bar)
+            }
+            try? context.save()
+        }
+    }
+    
     /// Cierra sesiones que se quedaron abiertas más de 12 horas (Fase 13)
     @MainActor
     private static func cleanupGhostSessions(context: ModelContext) {
         let twelveHoursAgo = Date().addingTimeInterval(-12 * 3600)
-        
-        // Usamos un FetchDescriptor simple
-        var descriptor = FetchDescriptor<Session>()
-        // Nota: Las predicates complejas a veces fallan en SwiftData, 
-        // así que filtramos manualmente si es necesario, o usamos una sencilla.
+        let descriptor = FetchDescriptor<Session>()
         
         do {
             let sessions = try context.fetch(descriptor)

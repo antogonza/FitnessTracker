@@ -38,6 +38,10 @@
 		A95DEE822FADEEE200F9C635 /* WidgetDataUpdater.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95DEE802FADEEE200F9C635 /* WidgetDataUpdater.swift */; };
 		A95DEE832FADEEF400F9C635 /* WidgetDataBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95DEE4D2FACA8EC00F9C635 /* WidgetDataBridge.swift */; };
 		A95DEE842FADEEF400F9C635 /* WidgetDataBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = A95DEE4D2FACA8EC00F9C635 /* WidgetDataBridge.swift */; };
+		A9EC57432FB325430083902E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EC57422FB325430083902E /* Theme.swift */; };
+		A9EC57442FB325430083902E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EC57422FB325430083902E /* Theme.swift */; };
+		A9EC57452FB325430083902E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EC57422FB325430083902E /* Theme.swift */; };
+		A9EC57462FB325430083902E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EC57422FB325430083902E /* Theme.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,6 +133,7 @@
 		A95DEE612FACEC7C00F9C635 /* FitnessTrackerWatchWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = FitnessTrackerWatchWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		A95DEE7B2FACEF9000F9C635 /* FitnessTrackerWatchWidgetsExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FitnessTrackerWatchWidgetsExtension.entitlements; sourceTree = "<group>"; };
 		A95DEE802FADEEE200F9C635 /* WidgetDataUpdater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetDataUpdater.swift; sourceTree = "<group>"; };
+		A9EC57422FB325430083902E /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -283,6 +288,7 @@
 				A95DEE4D2FACA8EC00F9C635 /* WidgetDataBridge.swift */,
 				A95DEE522FACE43B00F9C635 /* ExerciseCatalog.swift */,
 				A95DEE802FADEEE200F9C635 /* WidgetDataUpdater.swift */,
+				A9EC57422FB325430083902E /* Theme.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -479,6 +485,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9EC57442FB325430083902E /* Theme.swift in Sources */,
 				A95DEDFF2FAB459200F9C635 /* ModelContainer+Shared.swift in Sources */,
 				A95DEE002FAB459200F9C635 /* Exercise.swift in Sources */,
 				A95DEE012FAB459200F9C635 /* WorkoutSet.swift in Sources */,
@@ -502,6 +509,7 @@
 				A95DEDFD2FAB459200F9C635 /* Routine.swift in Sources */,
 				A95DEDFE2FAB459200F9C635 /* Session.swift in Sources */,
 				A95DEE812FADEEE200F9C635 /* WidgetDataUpdater.swift in Sources */,
+				A9EC57432FB325430083902E /* Theme.swift in Sources */,
 				A95DEE572FACE73400F9C635 /* WeeklySchedule.swift in Sources */,
 				A95DEE832FADEEF400F9C635 /* WidgetDataBridge.swift in Sources */,
 			);
@@ -513,6 +521,7 @@
 			files = (
 				A95DEE472FAC9FE900F9C635 /* RestTimerAttributes.swift in Sources */,
 				A95DEE4F2FACA8EC00F9C635 /* WidgetDataBridge.swift in Sources */,
+				A9EC57452FB325430083902E /* Theme.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,6 +529,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9EC57462FB325430083902E /* Theme.swift in Sources */,
 				A95DEE842FADEEF400F9C635 /* WidgetDataBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,6 +9,7 @@ final class Routine {
     
     var defaultRestBetweenSets: Int = 90
     var defaultRestBetweenExercises: Int = 120
+    var category: String = "Otros"
     
     // Relaciones opcionales para CloudKit
     @Relationship(deleteRule: .cascade, inverse: \Exercise.routine)
@@ -21,9 +22,10 @@ final class Routine {
     @Relationship(inverse: \WeeklySchedule.routine)
     var weeklySchedules: [WeeklySchedule]? = []
     
-    init(id: UUID = UUID(), name: String, creationDate: Date = .now, defaultRestBetweenSets: Int = 90, defaultRestBetweenExercises: Int = 120) {
+    init(id: UUID = UUID(), name: String, category: String = "Otros", creationDate: Date = .now, defaultRestBetweenSets: Int = 90, defaultRestBetweenExercises: Int = 120) {
         self.id = id
         self.name = name
+        self.category = category
         self.creationDate = creationDate
         self.defaultRestBetweenSets = defaultRestBetweenSets
         self.defaultRestBetweenExercises = defaultRestBetweenExercises

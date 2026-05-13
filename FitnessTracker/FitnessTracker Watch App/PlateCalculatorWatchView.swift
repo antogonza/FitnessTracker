@@ -32,7 +32,7 @@ struct PlateCalculatorWatchView: View {
                 VStack {
                     Text("PESO TOTAL")
                         .font(.caption2)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.white.opacity(0.6))
                     
                     Text("\(String(format: "%.1f", targetWeight)) kg")
                         .font(.title2)
@@ -59,12 +59,12 @@ struct PlateCalculatorWatchView: View {
                 if plates.isEmpty {
                     Text("Solo la barra")
                         .font(.caption)
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.white.opacity(0.6))
                 } else {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("DISCOS POR LADO")
                             .font(.system(size: 10, weight: .bold))
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.white.opacity(0.6))
                         
                         ForEach(plates, id: \.weight) { plate in
                             HStack {

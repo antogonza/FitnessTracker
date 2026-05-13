@@ -18,7 +18,7 @@ struct RestTimerView: View {
                         .font(.caption)
                 }
                 .buttonStyle(.plain)
-                .foregroundStyle(.secondary)
+                .foregroundStyle(.white.opacity(0.6))
                 .padding(.top, 4)
                 
                 Spacer()

@@ -31,18 +31,18 @@ struct ActiveExerciseView: View {
     }
     
     var body: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: 8) {
             // ENCABEZADO DINÁMICO
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 0) {
                     Text(exercise.name)
-                        .font(.system(.headline, design: .rounded))
-                        .foregroundStyle(.orange)
+                        .font(.system(.footnote, design: .rounded).bold())
+                        .foregroundStyle(Theme.primaryGradient)
                         .lineLimit(1)
                     
                     Text("SERIE \(currentSetIndex + 1) / \(exercise.targetSets)")
-                        .font(.system(size: 10, weight: .bold))
-                        .foregroundStyle(.secondary)
+                        .font(.system(size: 10, weight: .black, design: .rounded))
+                        .foregroundStyle(.white.opacity(0.6))
                 }
                 
                 Spacer()
@@ -53,99 +53,124 @@ struct ActiveExerciseView: View {
                         .foregroundStyle(.blue)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
-                        .background(Color.blue.opacity(0.15).cornerRadius(8))
+                        .background(Color.blue.opacity(0.1).clipShape(Capsule()))
                 }
             }
-            .padding(.horizontal, 10)
+            .padding(.horizontal, 8)
             
             // CARD DE PESO (USANDO CORONA)
-            VStack(spacing: 2) {
+            VStack(spacing: 4) {
                 HStack {
-                    Text("PESO")
-                        .font(.system(size: 10, weight: .black))
+                    Label("PESO", systemImage: "scalemass.fill")
+                        .font(.system(size: 9, weight: .black, design: .rounded))
                         .foregroundStyle(.green)
                     Spacer()
-                    Text("Ant: \(String(format: "%.1f", lastWeight))kg")
-                        .font(.system(size: 9))
-                        .foregroundStyle(.secondary)
+                    if lastWeight > 0 {
+                        Text("Anterior: \(String(format: "%.1f", lastWeight))kg")
+                            .font(.system(size: 8, weight: .medium, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.6))
+                    }
                 }
-                .padding(.horizontal, 12)
+                .padding(.horizontal, 10)
                 
-                Text(String(format: "%.1f", weight))
-                    .font(.system(size: 34, weight: .bold, design: .rounded))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .background(
-                        LinearGradient(colors: [Color.green.opacity(0.2), Color.green.opacity(0.05)], startPoint: .top, endPoint: .bottom)
-                    )
-                    .cornerRadius(12)
-                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.green.opacity(0.3), lineWidth: 1))
-                    .focusable()
-                    .digitalCrownRotation($weight, from: 0, through: 500, by: 0.5, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: true)
+                ZStack {
+                    RoundedRectangle(cornerRadius: Theme.innerCornerRadius, style: .continuous)
+                        .fill(LinearGradient(colors: [Color.green.opacity(0.15), Color.green.opacity(0.02)], startPoint: .top, endPoint: .bottom))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: Theme.innerCornerRadius, style: .continuous)
+                                .stroke(Color.green.opacity(0.2), lineWidth: 1)
+                        )
+                    
+                    HStack(alignment: .lastTextBaseline, spacing: 2) {
+                        Text(String(format: "%.1f", weight))
+                            .font(.system(size: 36, weight: .bold, design: .rounded))
+                            .contentTransition(.numericText())
+                        Text("kg")
+                            .font(.system(size: 14, weight: .bold, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.6))
+                    }
+                }
+                .frame(height: 54)
+                .focusable()
+                .digitalCrownRotation($weight, from: 0, through: 500, by: 0.5, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: true)
             }
-            .padding(.horizontal, 6)
+            .padding(.horizontal, 4)
             
-            // CARD DE REPETICIONES (BOTONES TÁCTILES GIGANTES - INFALIBLE)
-            VStack(spacing: 2) {
+            // CARD DE REPETICIONES
+            VStack(spacing: 4) {
                 HStack {
-                    Text("REPS")
-                        .font(.system(size: 10, weight: .black))
+                    Label("REPS", systemImage: "repeat")
+                        .font(.system(size: 9, weight: .black, design: .rounded))
                         .foregroundStyle(.blue)
                     Spacer()
-                    Text("Ant: \(lastReps)")
-                        .font(.system(size: 9))
-                        .foregroundStyle(.secondary)
+                    if lastReps > 0 {
+                        Text("Anterior: \(lastReps)")
+                            .font(.system(size: 8, weight: .medium, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.6))
+                    }
                 }
-                .padding(.horizontal, 12)
+                .padding(.horizontal, 10)
                 
                 HStack(spacing: 0) {
                     Button(action: { if reps > 1 { reps -= 1; WKInterfaceDevice.current().play(.click) } }) {
-                        Image(systemName: "minus")
-                            .font(.system(size: 20, weight: .bold))
+                        Image(systemName: "minus.circle.fill")
+                            .font(.system(size: 22))
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .background(Color.white.opacity(0.1))
+                            .background(Color.white.opacity(0.05))
                     }
                     .buttonStyle(.plain)
                     
                     Text("\(reps)")
-                        .font(.system(size: 30, weight: .bold, design: .rounded))
+                        .font(.system(size: 32, weight: .bold, design: .rounded))
                         .frame(width: 50)
                         .frame(maxHeight: .infinity)
-                        .background(Color.white.opacity(0.05))
+                        .background(Color.white.opacity(0.02))
+                        .contentTransition(.numericText())
                     
                     Button(action: { reps += 1; WKInterfaceDevice.current().play(.click) }) {
-                        Image(systemName: "plus")
-                            .font(.system(size: 20, weight: .bold))
+                        Image(systemName: "plus.circle.fill")
+                            .font(.system(size: 22))
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .background(Color.white.opacity(0.1))
+                            .background(Color.white.opacity(0.05))
                     }
                     .buttonStyle(.plain)
                 }
-                .frame(height: 50)
-                .cornerRadius(12)
-                .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.blue.opacity(0.3), lineWidth: 1))
+                .frame(height: 54)
+                .clipShape(RoundedRectangle(cornerRadius: Theme.innerCornerRadius, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: Theme.innerCornerRadius, style: .continuous)
+                        .stroke(Color.blue.opacity(0.2), lineWidth: 1)
+                )
             }
-            .padding(.horizontal, 6)
+            .padding(.horizontal, 4)
             
             // BOTÓN DE ACCIÓN DINÁMICO
             Button(action: saveSet) {
-                Text(currentSetIndex >= exercise.targetSets ? "COMPLETADO" : "SERIE \(currentSetIndex + 1) / \(exercise.targetSets)")
-                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                Text(currentSetIndex >= exercise.targetSets ? "COMPLETADO" : "TERMINAR SERIE")
+                    .font(.system(size: 14, weight: .black, design: .rounded))
                     .frame(maxWidth: .infinity)
-                    .frame(height: 40)
-                    .background(currentSetIndex >= exercise.targetSets ? Color.gray.opacity(0.3) : Color.green)
+                    .frame(height: 44)
+                    .background {
+                        if currentSetIndex >= exercise.targetSets {
+                            Color.gray.opacity(0.2)
+                        } else {
+                            Theme.successGradient
+                        }
+                    }
                     .foregroundColor(currentSetIndex >= exercise.targetSets ? .secondary : .black)
-                    .cornerRadius(12)
+                    .clipShape(RoundedRectangle(cornerRadius: Theme.innerCornerRadius, style: .continuous))
+                    .shadow(color: (currentSetIndex >= exercise.targetSets ? Color.clear : Color.green.opacity(0.3)), radius: 4)
             }
             .buttonStyle(.plain)
             .disabled(currentSetIndex >= exercise.targetSets)
-            .padding(.horizontal, 6)
-            .padding(.bottom, 2)
+            .padding(.horizontal, 4)
         }
+        .padding(.bottom, 2)
         .onAppear(perform: setupInitialValues)
         .overlay {
             if showPRCelebration {
                 PRCelebrationOverlay()
+                    .transition(.opacity.combined(with: .scale))
             }
         }
     }
@@ -175,30 +200,34 @@ struct ActiveExerciseView: View {
     }
     
     private func saveSet() {
-        if weight > personalRecord && personalRecord > 0 {
-            showPRCelebration = true
-            WKInterfaceDevice.current().play(.success)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                showPRCelebration = false
+        withAnimation(.spring()) {
+            if weight > personalRecord && personalRecord > 0 {
+                showPRCelebration = true
+                WKInterfaceDevice.current().play(.success)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                    withAnimation {
+                        showPRCelebration = false
+                    }
+                }
+            } else {
+                WKInterfaceDevice.current().play(.click)
             }
-        } else {
-            WKInterfaceDevice.current().play(.click)
+            
+            let newSet = WorkoutSet(weight: weight, reps: reps, exercise: exercise, session: session)
+            modelContext.insert(newSet)
+            
+            timerManager.nextExerciseName = exercise.name
+            timerManager.startTimer(duration: 90)
+            
+            currentSetIndex += 1
+            if currentSetIndex >= exercise.targetSets {
+                onExerciseComplete()
+            } else {
+                updateLastValues()
+            }
+            
+            try? modelContext.save()
         }
-        
-        let newSet = WorkoutSet(weight: weight, reps: reps, exercise: exercise, session: session)
-        modelContext.insert(newSet)
-        
-        timerManager.nextExerciseName = exercise.name
-        timerManager.startTimer(duration: 90)
-        
-        currentSetIndex += 1
-        if currentSetIndex >= exercise.targetSets {
-            onExerciseComplete()
-        } else {
-            updateLastValues()
-        }
-        
-        try? modelContext.save()
     }
     
     private func updateLastValues() {
@@ -222,18 +251,36 @@ struct ActiveExerciseView: View {
 struct PRCelebrationOverlay: View {
     var body: some View {
         ZStack {
-            Color.black.opacity(0.85).ignoresSafeArea()
-            VStack {
-                Text("🎉")
-                    .font(.system(size: 60))
-                Text("¡NUEVO RÉCORD!")
-                    .font(.system(.headline, design: .rounded))
-                    .foregroundStyle(.yellow)
-                Text("Has superado tu marca personal")
-                    .font(.system(size: 10))
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
+            Rectangle()
+                .fill(.ultraThinMaterial)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 12) {
+                ZStack {
+                    Circle()
+                        .fill(Theme.primaryGradient)
+                        .frame(width: 70, height: 70)
+                        .blur(radius: 20)
+                        .opacity(0.6)
+                    
+                    Text("🏆")
+                        .font(.system(size: 50))
+                }
+                
+                VStack(spacing: 2) {
+                    Text("NUEVO RÉCORD")
+                        .font(.system(.headline, design: .rounded).bold())
+                        .foregroundStyle(.yellow)
+                    
+                    Text("¡Has superado tu mejor marca!")
+                        .font(.system(size: 10, weight: .medium, design: .rounded))
+                        .foregroundStyle(.white.opacity(0.6))
+                        .multilineTextAlignment(.center)
+                }
             }
+            .padding()
+            .fitnessCard()
         }
     }
 }
+

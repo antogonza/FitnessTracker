@@ -30,77 +30,112 @@ struct ExerciseProgressView: View {
     }
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                // Tarjeta de Récord Personal (PR)
-                VStack {
-                    Text("Récord Personal (Máx Peso)")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    Text("\(String(format: "%.1f", maxWeight)) kg")
-                        .font(.system(size: 40, weight: .bold, design: .rounded))
-                        .foregroundColor(.green)
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color(UIColor.secondarySystemGroupedBackground))
-                .cornerRadius(12)
-                .padding(.horizontal)
-                
-                // Gráfica de evolución
-                if chartData.count > 1 {
-                    VStack(alignment: .leading) {
-                        Text("Evolución de Peso Máximo")
-                            .font(.headline)
-                            .padding(.bottom, 8)
+        ZStack {
+            Color.black.ignoresSafeArea()
+            
+            ScrollView {
+                VStack(spacing: 24) {
+                    // Tarjeta de Récord Personal (PR)
+                    VStack(spacing: 8) {
+                        Text("RÉCORD PERSONAL")
+                            .font(.system(size: 10, weight: .black, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.6))
                         
-                        Chart {
-                            ForEach(chartData, id: \.date) { item in
-                                LineMark(
-                                    x: .value("Fecha", item.date),
-                                    y: .value("Peso", item.maxWeight)
-                                )
-                                .interpolationMethod(.catmullRom)
-                                .foregroundStyle(Color.green)
-                                .symbol(Circle())
-                                
-                                AreaMark(
-                                    x: .value("Fecha", item.date),
-                                    y: .value("Peso", item.maxWeight)
-                                )
-                                .interpolationMethod(.catmullRom)
-                                .foregroundStyle(
-                                    LinearGradient(
-                                        colors: [Color.green.opacity(0.3), Color.clear],
-                                        startPoint: .top,
-                                        endPoint: .bottom
-                                    )
-                                )
-                            }
+                        HStack(alignment: .firstTextBaseline, spacing: 4) {
+                            Text("\(String(format: "%.1f", maxWeight))")
+                                .font(.system(size: 48, weight: .black, design: .rounded))
+                                .foregroundStyle(Theme.successGradient)
+                            Text("kg")
+                                .font(.system(.title3, design: .rounded).bold())
+                                .foregroundStyle(Theme.success)
                         }
-                        .frame(height: 250)
-                        .chartXAxis {
-                            AxisMarks(values: .stride(by: .day)) { value in
-                                AxisGridLine()
-                                AxisTick()
-                                AxisValueLabel(format: .dateTime.day().month())
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 32)
+                    .background(Theme.glassBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 24, style: .continuous)
+                            .stroke(Theme.success.opacity(0.2), lineWidth: 1)
+                    )
+                    .padding(.horizontal)
+                    
+                    // Gráfica de evolución
+                    VStack(alignment: .leading, spacing: 20) {
+                        Text("EVOLUCIÓN")
+                            .font(.system(size: 10, weight: .black, design: .rounded))
+                            .foregroundStyle(.white.opacity(0.6))
+                        
+                        if chartData.count > 1 {
+                            Chart {
+                                ForEach(chartData, id: \.date) { item in
+                                    LineMark(
+                                        x: .value("Fecha", item.date),
+                                        y: .value("Peso", item.maxWeight)
+                                    )
+                                    .interpolationMethod(.catmullRom)
+                                    .foregroundStyle(Theme.successGradient)
+                                    .lineStyle(StrokeStyle(lineWidth: 3))
+                                    .symbol {
+                                        Circle()
+                                            .fill(Theme.success)
+                                            .frame(width: 8, height: 8)
+                                            .overlay(Circle().stroke(Color.black, lineWidth: 2))
+                                    }
+                                    
+                                    AreaMark(
+                                        x: .value("Fecha", item.date),
+                                        y: .value("Peso", item.maxWeight)
+                                    )
+                                    .interpolationMethod(.catmullRom)
+                                    .foregroundStyle(
+                                        LinearGradient(
+                                            colors: [Theme.success.opacity(0.2), Color.clear],
+                                            startPoint: .top,
+                                            endPoint: .bottom
+                                        )
+                                    )
+                                }
                             }
+                            .frame(height: 240)
+                            .chartXAxis {
+                                AxisMarks(values: .stride(by: .day)) { value in
+                                    AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5)).foregroundStyle(Color.white.opacity(0.1))
+                                    AxisValueLabel(format: .dateTime.day().month(), centered: true)
+                                        .foregroundStyle(.white.opacity(0.6))
+                                }
+                            }
+                            .chartYAxis {
+                                AxisMarks { value in
+                                    AxisGridLine(stroke: StrokeStyle(lineWidth: 0.5)).foregroundStyle(Color.white.opacity(0.1))
+                                    AxisValueLabel()
+                                        .foregroundStyle(.white.opacity(0.6))
+                                }
+                            }
+                        } else {
+                            VStack(spacing: 12) {
+                                Image(systemName: "chart.line.uptrend.xyaxis")
+                                    .font(.system(size: 40))
+                                    .foregroundStyle(Theme.primary.opacity(0.3))
+                                Text("Sigue entrenando para ver tu evolución gráfica.")
+                                    .font(.system(.footnote, design: .rounded))
+                                    .foregroundColor(.white.opacity(0.6))
+                                    .multilineTextAlignment(.center)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 40)
                         }
                     }
                     .padding()
-                    .background(Color(UIColor.secondarySystemGroupedBackground))
-                    .cornerRadius(12)
+                    .background(Theme.glassBackground)
+                    .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
                     .padding(.horizontal)
-                } else {
-                    Text("Sigue entrenando para ver tu evolución gráfica (mínimo 2 sesiones en días distintos).")
-                        .foregroundColor(.secondary)
-                        .padding()
-                        .multilineTextAlignment(.center)
                 }
+                .padding(.vertical)
             }
-            .padding(.vertical)
         }
         .navigationTitle(exerciseName)
-        .background(Color(UIColor.systemGroupedBackground))
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
+

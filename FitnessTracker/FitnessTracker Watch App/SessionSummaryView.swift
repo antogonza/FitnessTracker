@@ -87,7 +87,7 @@ struct SummaryRow: View {
                 .foregroundColor(color)
                 .frame(width: 24)
             Text(title)
-                .foregroundColor(.secondary)
+                .foregroundColor(.white.opacity(0.6))
             Spacer()
             Text(value)
                 .fontWeight(.semibold)
