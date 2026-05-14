@@ -21,6 +21,10 @@ struct SessionPagingView: View {
             if let session = session {
                 TabView(selection: $horizontalSelection) {
                     
+                    // PÁGINA -1: ESTADÍSTICAS
+                    WorkoutStatsWatchView(session: session)
+                        .tag(-1)
+                    
                     // PÁGINA 0: ENTRENAMIENTO
                     TabView(selection: $selection) {
                         if let exercises = routine.exercises?.sorted(by: { $0.order < $1.order }) {
@@ -36,7 +40,7 @@ struct SessionPagingView: View {
                                             selection = min(selection + 1, totalExercises)
                                         }
                                     },
-                                    weight: $activeWeight // Binding compartido al final
+                                    weight: $activeWeight
                                 )
                                 .tag(index)
                             }
