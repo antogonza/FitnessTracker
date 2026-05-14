@@ -8,7 +8,6 @@ struct PlateCalculatorWatchView: View {
         self._targetWeight = targetWeight
     }
     
-    // Algoritmo simple para el Watch
     private var plates: [(weight: Double, count: Int)] {
         let available: [Double] = [20, 15, 10, 5, 2.5, 1.25]
         var remaining = (targetWeight - barWeight) / 2.0
@@ -29,66 +28,109 @@ struct PlateCalculatorWatchView: View {
         ScrollView {
             VStack(spacing: 12) {
                 // Selector de peso con Digital Crown
-                VStack {
-                    Text("PESO TOTAL")
-                        .font(.caption2)
-                        .foregroundStyle(.white.opacity(0.6))
+                VStack(spacing: 2) {
+                    Text("PESO OBJETIVO")
+                        .font(.system(size: 8, weight: .black))
+                        .foregroundStyle(.white.opacity(0.5))
                     
-                    Text("\(String(format: "%.1f", targetWeight)) kg")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.orange)
+                    Text("\(String(format: "%.1f", targetWeight)) KG")
+                        .font(.system(size: 26, weight: .black, design: .rounded))
+                        .foregroundStyle(Theme.primary)
                         .focusable()
-                        .digitalCrownRotation($targetWeight, from: barWeight, through: 300, by: 2.5, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: true)
+                        .digitalCrownRotation($targetWeight, from: barWeight, through: 500, by: 2.5, sensitivity: .low, isContinuous: false, isHapticFeedbackEnabled: true)
                 }
+                .frame(maxWidth: .infinity)
                 .padding(.vertical, 8)
-                .background(Color.white.opacity(0.1))
-                .cornerRadius(10)
+                .background(Color(white: 0.12))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
                 
-                // Selector de barra (mini)
-                HStack {
-                    Button("10kg") { barWeight = 10 }.buttonStyle(.bordered).tint(barWeight == 10 ? .blue : .gray)
-                    Button("15kg") { barWeight = 15 }.buttonStyle(.bordered).tint(barWeight == 15 ? .blue : .gray)
-                    Button("20kg") { barWeight = 20 }.buttonStyle(.bordered).tint(barWeight == 20 ? .blue : .gray)
+                // Selector de barra (Estilo premium)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("BARRA")
+                        .font(.system(size: 8, weight: .bold))
+                        .foregroundStyle(.white.opacity(0.4))
+                    
+                    HStack(spacing: 4) {
+                        barButton(weight: 10)
+                        barButton(weight: 15)
+                        barButton(weight: 20)
+                    }
                 }
-                .font(.caption2)
-                
-                Divider()
                 
                 // Resultado de discos
-                if plates.isEmpty {
-                    Text("Solo la barra")
-                        .font(.caption)
-                        .foregroundStyle(.white.opacity(0.6))
-                } else {
-                    VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
                         Text("DISCOS POR LADO")
-                            .font(.system(size: 10, weight: .bold))
+                            .font(.system(size: 9, weight: .black))
                             .foregroundStyle(.white.opacity(0.6))
-                        
-                        ForEach(plates, id: \.weight) { plate in
-                            HStack {
-                                Circle()
-                                    .fill(plateColor(plate.weight))
-                                    .frame(width: 8, height: 8)
-                                
-                                Text("\(String(format: "%.4g", plate.weight)) kg")
-                                    .font(.system(.body, design: .rounded))
-                                
-                                Spacer()
-                                
-                                Text("x\(plate.count)")
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(.orange)
+                        Spacer()
+                        Image(systemName: "circle.grid.3x3.fill")
+                            .font(.system(size: 10))
+                            .foregroundStyle(Theme.primary)
+                    }
+                    
+                    if plates.isEmpty {
+                        Text("SOLO LA BARRA")
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundStyle(Theme.primary.opacity(0.5))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.vertical, 10)
+                    } else {
+                        VStack(spacing: 6) {
+                            ForEach(plates, id: \.weight) { plate in
+                                HStack {
+                                    Circle()
+                                        .fill(plateColor(plate.weight))
+                                        .frame(width: 6, height: 6)
+                                    
+                                    Text("\(String(format: "%.1f", plate.weight)) kg")
+                                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                                        .foregroundStyle(.white)
+                                    
+                                    Spacer()
+                                    
+                                    Text("x\(plate.count)")
+                                        .font(.system(size: 16, weight: .black, design: .rounded))
+                                        .foregroundStyle(Theme.primary)
+                                }
+                                .padding(8)
+                                .background(Color(white: 0.08))
+                                .clipShape(RoundedRectangle(cornerRadius: 8))
                             }
-                            .padding(.horizontal, 4)
                         }
                     }
                 }
+                .padding(10)
+                .background(Color(white: 0.05))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.white.opacity(0.05), lineWidth: 1))
             }
             .padding(.horizontal)
+            .padding(.bottom, 10)
         }
-        .navigationTitle("Calculadora")
+        .navigationTitle("Discos")
+    }
+    
+    private func barButton(weight: Double) -> some View {
+        Button {
+            barWeight = weight
+            WKInterfaceDevice.current().play(.click)
+        } label: {
+            Text("\(Int(weight))KG")
+                .font(.system(size: 10, weight: .black))
+                .frame(maxWidth: .infinity)
+                .frame(height: 30)
+                .background {
+                    if barWeight == weight {
+                        Theme.primaryGradient
+                    } else {
+                        Color.white.opacity(0.05)
+                    }
+                }
+                .foregroundStyle(barWeight == weight ? .black : .white)
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
     }
     
     private func plateColor(_ w: Double) -> Color {
@@ -101,8 +143,4 @@ struct PlateCalculatorWatchView: View {
         default: return .gray
         }
     }
-}
-
-#Preview {
-    PlateCalculatorWatchView(targetWeight: .constant(60.0))
 }
